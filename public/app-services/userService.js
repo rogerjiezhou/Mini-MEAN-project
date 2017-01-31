@@ -47,16 +47,20 @@
 
     function Login(username, password ,callback) {
       var response;
-      GetByUsername(username)
-        .then(function(user) {
-          console.log(user);
-          if(user !== null && user.password === password){
+      LoginCheck(username, password)
+        .then(function(response) {
+          console.log(response);
+          if(response.success){
             response = { success: true }
           } else {
             response = { success: false, message: 'Username or password is incorrect' };
           }
           callback(response);
         })
+    }
+
+    function LoginCheck(username, password) {
+      return $http.get('/login_check/', {params: {username:username,password:password}}).then(handleSuccess, handleError('Error finding user by username'));
     }
 
     function GetByUsername(username) {

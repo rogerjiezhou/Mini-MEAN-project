@@ -44,7 +44,27 @@ app.get('/user/:username', function(req, res) {
       res.send(data);
     }
   });
-  
+})
+
+app.get('/login_check/', function(req, res) {
+  var message = {};
+  db.collection('messageApp')
+    .findOne({
+              username : req.query.username,
+              password : req.query.password
+              },
+               function(err, data) {
+    if(err){
+      console.log('Find err');
+    }
+    else{
+      if(data == null)
+        message = { success: false };
+      else
+        message = { success: true };
+      res.send(message);
+    }
+  });
 })
 
 app.listen(3307, function() {
