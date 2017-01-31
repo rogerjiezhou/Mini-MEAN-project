@@ -9,19 +9,14 @@
 
     function register($scope, $rootScope, UserService, $location){
       $rootScope.formModel = {};
-      $rootScope.usernameValid = false;
-      $rootScope.typing = false;
+      // $rootScope.usernameValid = false;
+      // $rootScope.typing = false;
       $scope.onSubmit = function() {
-        if($rootScope.usernameValid && $scope.userForm.$valid){
-          if(localStorage !== undefined){
-            if(!localStorage.users){
-              localStorage.users = JSON.stringify([]);
-            }
-            var users = JSON.parse(localStorage.users);
-            users.push($rootScope.formModel);
-            localStorage.users = JSON.stringify(users);
-          }
-          $rootScope.usernameValid = false;
+        // $rootScope.usernameValid && 
+        if($scope.userForm.$valid){
+
+          // $rootScope.usernameValid = false;
+          UserService.CreateUser($rootScope.formModel);
           $rootScope.formModel = {};
 
           $location.path('/');
@@ -31,31 +26,31 @@
         
       };
 
-      $scope.validateUsername = function() {
-        if($rootScope.formModel.username.length != 0) {
-          $rootScope.typing = true;
-          $rootScope.validated = false;
-          $rootScope.invalidated = false;
-          UserService.ValidateRegister($rootScope.formModel)
-            .then(function(valid) {
-              if(valid.success) {
-                $rootScope.typing = false;
-                $rootScope.invalidated = false;
-                $rootScope.usernameValid = true;
-                console.log("valid");
-              } else {
-                console.log("invalid");
-                $rootScope.typing = false;
-                $rootScope.invalidated = true;
-                $rootScope.usernameValid = false;
-              }
-            }) 
-        } else {
-          $rootScope.typing = false;
-          $rootScope.validated = false;
-          $rootScope.invalidated = false;
-        }
-      }
+      // $scope.validateUsername = function() {
+      //   if($rootScope.formModel.username.length != 0) {
+      //     $rootScope.typing = true;
+      //     $rootScope.validated = false;
+      //     $rootScope.invalidated = false;
+      //     UserService.ValidateRegister($rootScope.formModel)
+      //       .then(function(valid) {
+      //         if(valid.success) {
+      //           $rootScope.typing = false;
+      //           $rootScope.invalidated = false;
+      //           $rootScope.usernameValid = true;
+      //           console.log("valid");
+      //         } else {
+      //           console.log("invalid");
+      //           $rootScope.typing = false;
+      //           $rootScope.invalidated = true;
+      //           $rootScope.usernameValid = false;
+      //         }
+      //       }) 
+      //   } else {
+      //     $rootScope.typing = false;
+      //     $rootScope.validated = false;
+      //     $rootScope.invalidated = false;
+      //   }
+      // }
     }
 })();
 

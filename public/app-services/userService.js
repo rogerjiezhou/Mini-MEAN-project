@@ -5,16 +5,17 @@
         .module('myapp')
         .factory('UserService', UserService);
  
-    UserService.$inject = ['$q','$filter', '$timeout', '$rootScope'];
+    UserService.$inject = ['$q','$filter', '$timeout', '$rootScope', '$http'];
 
 
-  function UserService($q, $filter, $timeout, $rootScope) {
+  function UserService($q, $filter, $timeout, $rootScope, $http) {
     var UserService = {};
 
     UserService.GetByUsername = GetByUsername;
     UserService.ValidateRegister = ValidateRegister;
     UserService.Login = Login;
     UserService.GetUserIndex = GetUserIndex;
+    UserService.CreateUser = CreateUser;
 
     return UserService;
    
@@ -34,6 +35,10 @@
       }, 500);
 
       return deferred.promise;
+    }
+
+    function CreateUser(user) {
+      $http.post('/regiter_user', user).then(handleSuccess, handleError('Error creating user'));    
     }
 
     function Login(username, password ,callback) {
@@ -77,5 +82,16 @@
       }
         return JSON.parse(localStorage.users);    
     }
+
+    function handleSuccess(res) {
+      return res.data;
+    }
+
+    function handleError(error) {
+      return function() {
+        return { success: false, message: error};
+      };
+    }
+
   }
 })();
