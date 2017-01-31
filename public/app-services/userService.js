@@ -42,27 +42,25 @@
     }
 
     function Login(username, password ,callback) {
+
+    }
+
+    function Login(username, password ,callback) {
       var response;
-      $timeout(function() {
-        GetByUsername(username)
-          .then(function(user) {
-            console.log(user);
-            if(user !== null && user.password === password){
-              response = { success: true }
-            } else {
-              response = { success: false, message: 'Username or password is incorrect' };
-            }
-            callback(response);
-          })
-      }, 1000);
+      GetByUsername(username)
+        .then(function(user) {
+          console.log(user);
+          if(user !== null && user.password === password){
+            response = { success: true }
+          } else {
+            response = { success: false, message: 'Username or password is incorrect' };
+          }
+          callback(response);
+        })
     }
 
     function GetByUsername(username) {
-      var deferred = $q.defer();
-      var filtered = $filter('filter')(getUsers(),{username: username},true);
-      var user = filtered.length ? filtered[0] : null;
-      deferred.resolve(user);
-      return deferred.promise;
+      return $http.get('/user/' + username).then(handleSuccess, handleError('Error finding user by username'));
     }
 
     function GetUserIndex(username) {
@@ -84,6 +82,7 @@
     }
 
     function handleSuccess(res) {
+      console.log(res);
       return res.data;
     }
 

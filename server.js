@@ -30,6 +30,21 @@ app.post('/regiter_user', function(req, res) {
     else
       console.log('Saved to db');
   })
+  res.send({ success: true});
+})
+
+app.get('/user/:username', function(req, res) {
+  db.collection('messageApp')
+    .findOne({username : req.params.username}, function(err, data) {
+    if(err){
+      console.log('Find err');
+    }
+    else{
+      console.log('Find element');
+      res.send(data);
+    }
+  });
+  
 })
 
 app.listen(3307, function() {
