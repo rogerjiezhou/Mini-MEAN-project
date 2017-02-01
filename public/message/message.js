@@ -34,7 +34,7 @@
         event.target.attributes.src.value = "/app-content/img/clicked.png";
         important = '1';
       }
-
+      
       MessageService.UpdateImportant(id, important).then(function(err, res){});
 
     }

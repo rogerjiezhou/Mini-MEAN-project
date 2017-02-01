@@ -14,7 +14,8 @@
     MessageService.DeleteMessage = DeleteMessage;
     MessageService.GetMessages = GetMessages;
     MessageService.UpdateImportant = UpdateImportant;
-    
+    MessageService.AddComment = AddComment;
+    MessageService.AddMessage = AddMessage;
     
     return MessageService;
     
@@ -32,6 +33,14 @@
 
     function UpdateImportant(messageID, important) {
       return $http.put('/updateImportant/', {params: {id:messageID,important:important}}).then(handleSuccess, handleError('Error getting message'));
+    }
+
+    function AddMessage(message) {
+      return $http.post('/addMessage/', message).then(handleSuccess, handleError('Error getting message'));
+    }
+
+    function AddComment(messageID, message) {
+      return $http.put('/addComment/', {params: {id:messageID,message:message}}).then(handleSuccess, handleError('Error getting message'));
     }
 
     function handleSuccess(res) {

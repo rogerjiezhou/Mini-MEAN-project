@@ -31,29 +31,18 @@
     }
 
     $scope.submitReply = function() {
-      var messages = JSON.parse(localStorage.messages);
-      var lastMessage = messages[messages.length - 1];
 
-      $scope.replyMessage.id = lastMessage + 1;
       $scope.replyMessage.sender = $rootScope.globals.currentUser.username;
-      $scope.replyMessage.sender_img = $scope.message.sender_img;
+      $scope.replyMessage.sender_img = $scope.message.recipient_img;
       $scope.replyMessage.recipient = $scope.message.sender;
       $scope.replyMessage.recipient_img = $scope.message.sender_img;
       $scope.replyMessage.title = $scope.message.title;
       $scope.replyMessage.important = '0';
       $scope.replyMessage.created_at = $filter('date')(new Date(), 'yyyy-MM-dd HH:mm:ss');
       $scope.replyMessage.reply = [];
-      
-      for(var key in messages){
-        if(messages[key].id == $stateParams.id){
-          messages[key].reply.push($scope.replyMessage);
-          console.log(messages[key]);
-          break;
-        }    
-      }
-      messages.push($scope.replyMessage);
-      console.log(messages);
-      localStorage.messages = JSON.stringify(messages);    
+
+      MessageService.AddMessage($scope.replyMessage).then(function(res){});
+      MessageService.AddComment($stateParams.id, $scope.replyMessage).then(function(res){});
 
       $rootScope.reply = false;
       $state.reload();

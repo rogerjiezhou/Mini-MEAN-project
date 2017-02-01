@@ -141,6 +141,33 @@ app.put('/updateImportant/', function(req, res) {
   res.send(message);
 });
 
+app.post('/addMessage/',  function(req, res) {
+  db.collection('message').save(req.body, function(err, result) {
+    if(err)
+      console.log('Save message err');
+    else
+      console.log('Save message to db');
+  })
+  res.send({ success: true});
+});
+
+app.put('/addComment', function(req, res) {
+  var message = {};
+  var params = req.body.params;
+  db.collection('message')
+    .update({_id: ObjectID(params.id)},{$addToSet: {reply:params.message}}, function(err, data) {
+    if(err){
+      console.log('Add reply err');
+      message = { data: false };
+    }
+    else{
+      console.log('Add reply');
+      message = { data: true };
+    }
+  });
+  res.send(message);
+});
+
 app.listen(3307, function() {
   console.log("Server running at port 3307")
 });
