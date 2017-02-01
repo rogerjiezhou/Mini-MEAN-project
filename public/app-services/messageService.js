@@ -25,18 +25,7 @@
     }
 
     function DeleteMessage(messageID) {
-      console.log("delete" + messageID);
-      var deferred = $q.defer();
-      var messages = getMessage();
-      for(var key in messages) {
-        if(messages[key].id == messageID){
-          messages.splice(key ,1);
-          localStorage.messages = JSON.stringify(messages);
-          break;
-        }
-      }
-      deferred.resolve(messages);
-      return deferred.promise;
+      return $http.delete('/deleteMessage/' + messageID).then(handleSuccess, handleError('Error getting message'));
     }
 
     function handleSuccess(res) {

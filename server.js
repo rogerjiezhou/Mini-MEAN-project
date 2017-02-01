@@ -91,6 +91,7 @@ app.get('/messages', function(req, res) {
     if(err){
       console.log('Find messgae err');
     } else {
+      console.log('Find messages');
       res.json(message);
     }
   });  
@@ -98,15 +99,26 @@ app.get('/messages', function(req, res) {
 });
 
 app.get('/messageDetail/:messageID', function(req, res) {
-  console.log("in messagedetail request");
-
   db.collection('message').findOne({_id: ObjectID(req.params.messageID)}, 
     function(err, data) {
     if(err){
       console.log('Find message by id err');
     }
     else{
-      console.log('Find message');
+      console.log('Find message detail');
+      res.send(data);
+    }
+  })
+});
+
+app.delete('/deleteMessage/:messageID', function(req, res) {
+  db.collection('message').remove({_id: ObjectID(req.params.messageID)}, 
+    function(err, data) {
+    if(err){
+      console.log('Delete message by id err');
+    }
+    else{
+      console.log('Delete message');
       res.send(data);
     }
   })
