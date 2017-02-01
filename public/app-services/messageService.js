@@ -13,6 +13,8 @@
     MessageService.GetMessageById = GetMessageById;
     MessageService.DeleteMessage = DeleteMessage;
     MessageService.GetMessages = GetMessages;
+    MessageService.UpdateImportant = UpdateImportant;
+    
     
     return MessageService;
     
@@ -26,6 +28,10 @@
 
     function DeleteMessage(messageID) {
       return $http.delete('/deleteMessage/' + messageID).then(handleSuccess, handleError('Error getting message'));
+    }
+
+    function UpdateImportant(messageID, important) {
+      return $http.put('/updateImportant/', {params: {id:messageID,important:important}}).then(handleSuccess, handleError('Error getting message'));
     }
 
     function handleSuccess(res) {

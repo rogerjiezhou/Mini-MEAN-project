@@ -11,7 +11,7 @@
       </tr>
       <tr ng-repeat="message in messages" ng-click="goto(message._id)">
         <td class="important">
-          <img class="importantIcon" src="/app-content/img/clicked.png" ng-if="isImportant(message)" ng-click="flag(message.id, $event); $event.stopPropagation()">
+          <img class="importantIcon" src="/app-content/img/clicked.png" ng-if="isImportant(message)" ng-click="flag(message._id, $event); $event.stopPropagation()">
           <img class="importantIcon" src="/app-content/img/unclicked.png" ng-if="!isImportant(message)" ng-click="flag(message._id, $event); $event.stopPropagation()">
         </td>
         <td><img ng-src="{{message.sender_img}}" /></td>

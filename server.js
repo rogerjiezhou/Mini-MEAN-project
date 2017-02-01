@@ -124,6 +124,22 @@ app.delete('/deleteMessage/:messageID', function(req, res) {
   })
 });
 
+app.put('/updateImportant/', function(req, res) {
+  var message = {};
+  var params = req.body.params;
+  db.collection('message')
+    .update({_id: ObjectID(params.id)},{$set: {important:params.important}}, function(err, data) {
+    if(err){
+      console.log('Update err');
+      message = { data: false };
+    }
+    else{
+      console.log('Updated important');
+      message = { data: true };
+    }
+  });
+  res.send(message);
+});
 
 app.listen(3307, function() {
   console.log("Server running at port 3307")

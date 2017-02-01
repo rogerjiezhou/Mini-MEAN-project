@@ -25,10 +25,18 @@
 
     $scope.flag = function(id, event){
       var value = event.target.attributes.src.value;
-      if(value == '/app-content/img/clicked.png')
+      var important;
+      if(value == '/app-content/img/clicked.png'){
         event.target.attributes.src.value = "/app-content/img/unclicked.png";
-      else
+        important = '0';
+      }
+      else{
         event.target.attributes.src.value = "/app-content/img/clicked.png";
+        important = '1';
+      }
+
+      MessageService.UpdateImportant(id, important).then(function(err, res){});
+
     }
 
     $scope.goto = function(id) {

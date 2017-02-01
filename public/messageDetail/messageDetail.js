@@ -69,20 +69,17 @@
 
     $scope.flag = function(id, event){
       var value = event.target.attributes.src.value;
-      if(value == '/app-content/img/clicked.png')
+      var important;
+      if(value == '/app-content/img/clicked.png'){
         event.target.attributes.src.value = "/app-content/img/unclicked.png";
-      else
-        event.target.attributes.src.value = "/app-content/img/clicked.png";
-      var messages = JSON.parse(localStorage.messages);
-      for(var key in messages){
-        if(messages[key].id == id){
-          if(messages[key].important == '1')
-            messages[key].important = '0';
-          else
-            messages[key].important = '1';
-        }
+        important = '0';
       }
-      localStorage.messages = JSON.stringify(messages);
+      else{
+        event.target.attributes.src.value = "/app-content/img/clicked.png";
+        important = '1';
+      }
+      
+      MessageService.UpdateImportant(id, important).then(function(err, res){});
     }
   }
 
