@@ -5,22 +5,23 @@
         .module('myapp')
         .factory('MessageService', MessageService);
  
-    MessageService.$inject = ['$q','$filter', '$timeout', '$rootScope'];
+    MessageService.$inject = ['$q','$filter', '$timeout', '$rootScope', '$http'];
 
-  function MessageService($q, $filter, $timeout, $rootScope) {
+  function MessageService($q, $filter, $timeout, $rootScope, $http) {
     var MessageService = {};
 
     MessageService.GetMessageById = GetMessageById;
     MessageService.DeleteMessage = DeleteMessage;
-
+    MessageService.GetMessages = GetMessages;
+    
     return MessageService;
     
+    function GetMessages() {
+      return $http.get('/messages').then(handleSuccess, handleError('Error getting message'));
+    }
+
     function GetMessageById(messageID) {
-      var deferred = $q.defer();
-      var filtered = $filter('filter')(getMessage(), {id : messageID}, true)
-      var message = filtered.length ? filtered[0] : null;
-      deferred.resolve(message);
-      return deferred.promise;
+      return $http.get('/messageDetail/' + messageID).then(handleSuccess, handleError('Error getting message'));
     }
 
     function DeleteMessage(messageID) {
@@ -38,12 +39,14 @@
       return deferred.promise;
     }
 
-    function getMessage() {
-      if(!localStorage.messages){
-        localStorage.messages = JSON.stringify([]);
-      }
-      return JSON.parse(localStorage.messages);
+    function handleSuccess(res) {
+      return res.data;
     }
 
+    function handleError(error) {
+      return function() {
+        return { success: false, message: error};
+      };
+    }
   }
 })();

@@ -17,7 +17,7 @@ MongoClient.connect(conn, function(err, database) {
   else
     console.log("Connected to db");
   db = database;
-})
+});
 
 
 app.get('/', function(req, res) {
@@ -32,7 +32,7 @@ app.post('/regiter_user', function(req, res) {
       console.log('Saved to db');
   })
   res.send({ success: true});
-})
+});
 
 app.get('/user/:username', function(req, res) {
   db.collection('user')
@@ -45,20 +45,7 @@ app.get('/user/:username', function(req, res) {
       res.send(data);
     }
   });
-})
-
-app.get('/userId/:username', function(req, res) {
-  db.collection('user')
-    .findOne({username : req.params.username},{_id : 1}, function(err, data) {
-    if(err){
-      console.log('Find err');
-    }
-    else{
-      console.log('Find element');
-      res.send(data);
-    }
-  });
-})
+});
 
 app.put('/updateUser', function(req, res) {
   var message = {};
@@ -75,7 +62,7 @@ app.put('/updateUser', function(req, res) {
     }
   });
   res.send(message);
-})
+});
 
 app.get('/login_check/', function(req, res) {
   var message = {};
@@ -96,7 +83,35 @@ app.get('/login_check/', function(req, res) {
       res.send(message);
     }
   });
-})
+});
+
+app.get('/messages', function(req, res) {
+
+  db.collection('message').find().toArray(function(err, message){
+    if(err){
+      console.log('Find messgae err');
+    } else {
+      res.json(message);
+    }
+  });  
+
+});
+
+app.get('/messageDetail/:messageID', function(req, res) {
+  console.log("in messagedetail request");
+
+  db.collection('message').findOne({_id: ObjectID(req.params.messageID)}, 
+    function(err, data) {
+    if(err){
+      console.log('Find message by id err');
+    }
+    else{
+      console.log('Find message');
+      res.send(data);
+    }
+  })
+});
+
 
 app.listen(3307, function() {
   console.log("Server running at port 3307")

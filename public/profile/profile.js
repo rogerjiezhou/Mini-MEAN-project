@@ -17,10 +17,8 @@
       UserService.GetByUsername($rootScope.globals.currentUser.username)
         .then(function(user) {
           $rootScope.userID = user._id;
-          console.log($rootScope.userID);
           delete user["_id"];
           $rootScope.userModel = user;
-          console.log($rootScope.userModel);
         });
   
 

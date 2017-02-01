@@ -14,9 +14,7 @@
     UserService.GetByUsername = GetByUsername;
     UserService.ValidateRegister = ValidateRegister;
     UserService.Login = Login;
-    UserService.GetUserId = GetUserId;
     UserService.CreateUser = CreateUser;
-    UserService.GetUserId = GetUserId;
     UserService.UpdateUser = UpdateUser;
 
     return UserService;
@@ -47,7 +45,6 @@
       var response;
       LoginCheck(username, password)
         .then(function(response) {
-          console.log(response);
           if(response.success){
             response = { success: true }
           } else {
@@ -65,12 +62,8 @@
       return $http.get('/user/' + username).then(handleSuccess, handleError('Error finding user by username'));
     }
 
-    function GetUserId(username) {
-      return $http.get('/userId/' + username).then(handleSuccess, handleError('Error finding index by username'));
-    }
-
     function UpdateUser(id, user) {
-      return $http.put('/updateUser', {params: {id:id,user:user}}).then(handleSuccess, handleError('Error update user'));
+      return $http.put('/updateUser/', {params: {id:id,user:user}}).then(handleSuccess, handleError('Error update user'));
     }
 
     function handleSuccess(res) {
