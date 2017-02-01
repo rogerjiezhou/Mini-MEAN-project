@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID;
 
 var app = express();
 var conn = 'mongodb://localhost:27017/messageApp';
@@ -24,7 +25,7 @@ app.get('/', function(req, res) {
 });
 
 app.post('/regiter_user', function(req, res) {
-  db.collection('messageApp').save(req.body, function(err, result) {
+  db.collection('user').save(req.body, function(err, result) {
     if(err)
       console.log('Save err');
     else
@@ -34,7 +35,7 @@ app.post('/regiter_user', function(req, res) {
 })
 
 app.get('/user/:username', function(req, res) {
-  db.collection('messageApp')
+  db.collection('user')
     .findOne({username : req.params.username}, function(err, data) {
     if(err){
       console.log('Find err');
@@ -46,9 +47,39 @@ app.get('/user/:username', function(req, res) {
   });
 })
 
+app.get('/userId/:username', function(req, res) {
+  db.collection('user')
+    .findOne({username : req.params.username},{_id : 1}, function(err, data) {
+    if(err){
+      console.log('Find err');
+    }
+    else{
+      console.log('Find element');
+      res.send(data);
+    }
+  });
+})
+
+app.put('/updateUser', function(req, res) {
+  var message = {};
+  var params = req.body.params;
+  db.collection('user')
+    .update({_id: ObjectID(params.id)},{$set: JSON.parse(params.user)}, function(err, data) {
+    if(err){
+      console.log('Update err');
+      message = { data: false };
+    }
+    else{
+      console.log('Updated');
+      message = { data: true };
+    }
+  });
+  res.send(message);
+})
+
 app.get('/login_check/', function(req, res) {
   var message = {};
-  db.collection('messageApp')
+  db.collection('user')
     .findOne({
               username : req.query.username,
               password : req.query.password
@@ -58,7 +89,7 @@ app.get('/login_check/', function(req, res) {
       console.log('Find err');
     }
     else{
-      if(data == null)
+      if(data == null || data == {})
         message = { success: false };
       else
         message = { success: true };

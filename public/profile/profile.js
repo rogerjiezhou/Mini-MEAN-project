@@ -11,55 +11,61 @@
   function profile($scope, $rootScope, UserService, $location, $timeout){
 
     $rootScope.userModel = {};
+    $rootScope.userID;
 
-    UserService.GetByUsername($rootScope.globals.currentUser.username)
-      .then(function(user) {
-        $rootScope.userModel = user;
-    });
 
-    $rootScope.userIndex = UserService.GetUserIndex($rootScope.globals.currentUser.username);
+      UserService.GetByUsername($rootScope.globals.currentUser.username)
+        .then(function(user) {
+          $rootScope.userID = user._id;
+          console.log($rootScope.userID);
+          delete user["_id"];
+          $rootScope.userModel = user;
+          console.log($rootScope.userModel);
+        });
+  
 
     $rootScope.usernameValid = false;
     $rootScope.invalidated = false;
     $rootScope.typing = false;
 
     $scope.updateUser = function() {
-      if($rootScope.usernameValid && $scope.profileForm.$valid){
-        var users = JSON.parse(localStorage.users);
-        users[$rootScope.userIndex] = $rootScope.userModel;
-        localStorage.users = JSON.stringify(users);
+      if($scope.profileForm.$valid){
+        UserService.UpdateUser($rootScope.userID, JSON.stringify($rootScope.userModel))
+          .then(function(res){
+            return;
+          })
+       
         $rootScope.globals.currentUser.username = $rootScope.userModel.username;
-        $rootScope.usernameValid = false;
       } else {
         alert("invalid username");
       }
       
     };
-    $scope.validateUsername = function() {
-      if($rootScope.userModel.username != "" && 
-          $rootScope.userModel.username != $rootScope.globals.currentUser.username) {
-        $rootScope.typing = true;
-        $rootScope.validated = false;
-        $rootScope.invalidated = false;
-        UserService.ValidateRegister($rootScope.userModel)
-          .then(function(valid) {
-            if(valid.success) {
-              $rootScope.typing = false;
-              $rootScope.invalidated = false;
-              $rootScope.usernameValid = true;
-              console.log("valid");
-            } else {
-              console.log("invalid");
-              $rootScope.typing = false;
-              $rootScope.invalidated = true;
-              $rootScope.usernameValid = false;
-            }
-          }) 
-      }
-      else
-        $rootScope.typing = false;
-        $rootScope.validated = false;
-        $rootScope.invalidated = false;
-    }
+    // $scope.validateUsername = function() {
+    //   if($rootScope.userModel.username != "" && 
+    //       $rootScope.userModel.username != $rootScope.globals.currentUser.username) {
+    //     $rootScope.typing = true;
+    //     $rootScope.validated = false;
+    //     $rootScope.invalidated = false;
+    //     UserService.ValidateRegister($rootScope.userModel)
+    //       .then(function(valid) {
+    //         if(valid.success) {
+    //           $rootScope.typing = false;
+    //           $rootScope.invalidated = false;
+    //           $rootScope.usernameValid = true;
+    //           console.log("valid");
+    //         } else {
+    //           console.log("invalid");
+    //           $rootScope.typing = false;
+    //           $rootScope.invalidated = true;
+    //           $rootScope.usernameValid = false;
+    //         }
+    //       }) 
+    //   }
+    //   else
+    //     $rootScope.typing = false;
+    //     $rootScope.validated = false;
+    //     $rootScope.invalidated = false;
+    // }
   }
 })();

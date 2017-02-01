@@ -14,8 +14,10 @@
     UserService.GetByUsername = GetByUsername;
     UserService.ValidateRegister = ValidateRegister;
     UserService.Login = Login;
-    UserService.GetUserIndex = GetUserIndex;
+    UserService.GetUserId = GetUserId;
     UserService.CreateUser = CreateUser;
+    UserService.GetUserId = GetUserId;
+    UserService.UpdateUser = UpdateUser;
 
     return UserService;
    
@@ -42,10 +44,6 @@
     }
 
     function Login(username, password ,callback) {
-
-    }
-
-    function Login(username, password ,callback) {
       var response;
       LoginCheck(username, password)
         .then(function(response) {
@@ -67,26 +65,15 @@
       return $http.get('/user/' + username).then(handleSuccess, handleError('Error finding user by username'));
     }
 
-    function GetUserIndex(username) {
-      var users = getUsers();
-      var index = 0;
-      for(var key in users){
-        if(users[key].username == $rootScope.globals.currentUser.username)
-          break;
-        index++;
-      }
-      return index;
+    function GetUserId(username) {
+      return $http.get('/userId/' + username).then(handleSuccess, handleError('Error finding index by username'));
     }
 
-    function getUsers() {
-      if(!localStorage.users){
-        localStorage.users = JSON.stringify([]);
-      }
-        return JSON.parse(localStorage.users);    
+    function UpdateUser(id, user) {
+      return $http.put('/updateUser', {params: {id:id,user:user}}).then(handleSuccess, handleError('Error update user'));
     }
 
     function handleSuccess(res) {
-      console.log(res);
       return res.data;
     }
 
